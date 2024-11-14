@@ -14,8 +14,8 @@ with open('account.txt', 'r') as file:
 with open('name.txt', 'r') as file:
     names = file.read().splitlines()
 
-with open('email_content.txt', 'r') as file:
-    email_content = file.read()
+with open('content_template.txt', 'r') as file:
+    content_template = file.read()
 
 # SMTP服務器設置（以Gmail為例）
 smtp_server = 'smtp.gmail.com'
@@ -31,11 +31,14 @@ server.login(smtp_username, smtp_password)
 # 發送郵件
 for destination, account, name, password in zip(email_list, accounts, names, passwords):
     print("Sending to " + destination + " ...")
-    email_content += "\nName : " + name + "\nUsername : " + account + "\nPassword : " + password
-    msg = MIMEText(email_content)
-    msg['Subject'] = '2024 TOI模擬賽 帳號密碼通知'
+    content = content_template + '\n'
+    content += "\nName : " + name + "\nUsername : " + account + "\nPassword : " + password
+    msg = MIMEText(content)
+    msg['Subject'] = 'PD1 Midterm Judge Account and Password'
     msg['From'] = smtp_username
     msg['To'] = destination
+
+    print(content + '\n')
     server.send_message(msg)
 
 # 關閉連接
